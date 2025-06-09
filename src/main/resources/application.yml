@@ -1,9 +1,48 @@
 spring:
+  config:
+    import: optional:file:.env.properties
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/url_shortener
-    username: postgres
-    password: secret
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  sql:
+    init:
+      mode: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/url_shortener_dev
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:postgresql://prod-db-host:5432/url_shortener_prod
+    username: ${DB_USER}
+    password: ${DB_PASS}
